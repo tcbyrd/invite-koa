@@ -6,12 +6,14 @@
   "license": "ISC",
   "repository": "https://github.com/tcbyrd/invite-koa.git",
   "scripts": {
-    "dev": "nodemon --exec \"npm start\"",
-    "start": "probot run ./index.js",
+    "dev": "smee -u 'https://smee.io/YWDuVjj2fWHz7Vlp' -P '/probot' | npx serverless offline ",
+    "start": "npx serverless offline",
     "lint": "standard --fix",
     "test": "jest && standard"
   },
   "dependencies": {
+    "@probot/serverless-lambda": "github:probot/serverless-lambda",
+    "koa": "^2.5.0",
     "probot": "^6.0.0"
   },
   "devDependencies": {

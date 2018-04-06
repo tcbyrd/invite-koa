@@ -1,0 +1,28 @@
+service: probot-invite-koa
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+
+functions:
+
+  probot:
+    handler: index.handler
+
+    environment:
+      WEBHOOK_SECRET: development
+      APP_ID: 10789
+      LOG_FORMAT: json
+      WEBHOOK_PROXY_URL: https://smee.io/YWDuVjj2fWHz7Vlp
+
+    events:
+      - http:
+         path: /probot
+         method: get
+
+      - http:
+         path: /probot
+         method: post

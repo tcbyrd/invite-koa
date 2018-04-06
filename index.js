@@ -1,10 +1,10 @@
-module.exports = (robot) => {
-  // Your code here
-  robot.log('Yay, the app was loaded!')
+const { serverless } = require('@probot/serverless-lambda')
 
-  // For more information on building apps:
-  // https://probot.github.io/docs/
+const robot = (robot) => {
 
-  // To get your app running against GitHub, see:
-  // https://probot.github.io/docs/development/
+  robot.on('team.edited', async context => {
+    context.log({context})
+  })
 }
+
+module.exports.handler = serverless(robot)
