@@ -14,9 +14,8 @@ functions:
 
     environment:
       WEBHOOK_SECRET: development
-      APP_ID: 10789
+      APP_ID: <APP_ID>
       LOG_FORMAT: json
-      WEBHOOK_PROXY_URL: https://smee.io/YWDuVjj2fWHz7Vlp
 
     events:
       - http:
@@ -32,10 +31,8 @@ functions:
 
     environment:
       WEBHOOK_SECRET: development
-      APP_ID: 10789
+      APP_ID: <APP_ID>
       LOG_FORMAT: json
-      WEBHOOK_PROXY_URL: https://smee.io/YWDuVjj2fWHz7Vlp
-      SESSION_TOKEN: 26ff4488fa74ee300932d8d7b90c6e6bd9147d39
 
     events:
       - http:
