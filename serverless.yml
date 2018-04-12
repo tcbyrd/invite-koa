@@ -17,9 +17,9 @@ functions:
     handler: index.handler
 
     environment:
-      WEBHOOK_SECRET: development
-      APP_ID: 10789
-      LOG_FORMAT: json
+      WEBHOOK_SECRET: ${file(config/config.${self:provider.stage}.json):WEBHOOK_SECRET}
+      APP_ID: ${file(config/config.${self:provider.stage}.json):APP_ID}
+      LOG_FORMAT: ${file(config/config.${self:provider.stage}.json):LOG_FORMAT}
 
     events:
       - http:
