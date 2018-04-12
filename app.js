@@ -62,10 +62,17 @@ async function getInstallations (ctx, next) {
   ctx.state.installations = installations
 }
 
-function findInstallation (ctx) {
+async function findInstallation (ctx, next) {
   const installation = ctx.state.installations.find(i => {
     return i.account.login === ctx.params.owner
   })
+
+  const github = await ctx.state.robot.auth(installation.id)
+  const teams = (await github.orgs.getTeams({org: installation.account.login})).data
+
+  if (teams.length > 0) {
+    ctx.state.teams = teams
+  }
 
   if (installation) {
     ctx.state.installation = installation
@@ -111,19 +118,16 @@ router.get('/', async (ctx, next) => {
   await ctx.render('index', {installations, info})
 })
 
-router.use('/:owner', async (ctx, next) => {
-  findInstallation(ctx)
-  return next()
-})
-
 router.get('/:owner', async ctx => {
-  const { installation } = ctx.state
+  await findInstallation(ctx)
+  const { installation, teams } = ctx.state
   if (installation) {
-    await ctx.render('new', { installation })
+    await ctx.render('new', { installation, teams })
   }
 })
 
 router.post('/:owner', async ctx => {
+  await findInstallation(ctx)
   const { installation } = ctx.state
   const options = {
     sub: installation.account.login,
@@ -133,6 +137,10 @@ router.post('/:owner', async ctx => {
 
   if (ctx.request.body.exp) {
     options.exp = Math.floor(Date.now() / 1000) + Number(ctx.request.body.exp)
+  }
+
+  if (ctx.request.body.team) {
+    options.team = ctx.request.body.team
   }
 
   const token = jwt.sign(options, process.env.WEBHOOK_SECRET)
@@ -159,6 +167,13 @@ router.get('/join/:token', async ctx => {
     username: user.login,
     role: options.role
   })
+
+  if (options.team) {
+    await thisGitHub.orgs.addTeamMembership({
+      id: options.team,
+      username: user.login
+    })
+  }
 
   ctx.redirect(`https://github.com/orgs/${options.sub}/invitation`)
 })
