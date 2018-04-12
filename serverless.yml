@@ -3,6 +3,10 @@ service: probot-invite-koa
 plugins:
   - serverless-offline
 
+custom:
+  serverless-offline:
+    httpsProtocol: dev-certs
+
 provider:
   name: aws
   runtime: nodejs8.10
@@ -14,14 +18,10 @@ functions:
 
     environment:
       WEBHOOK_SECRET: development
-      APP_ID: <APP_ID>
+      APP_ID: 10789
       LOG_FORMAT: json
 
     events:
-      - http:
-         path: /probot
-         method: get
-
       - http:
          path: /probot
          method: post
@@ -30,13 +30,35 @@ functions:
     handler: app.handler
 
     environment:
-      WEBHOOK_SECRET: development
-      APP_ID: <APP_ID>
-      LOG_FORMAT: json
+      WEBHOOK_SECRET: ${file(config/config.${self:provider.stage}.json):WEBHOOK_SECRET}
+      APP_ID: ${file(config/config.${self:provider.stage}.json):APP_ID}
+      LOG_FORMAT: ${file(config/config.${self:provider.stage}.json):LOG_FORMAT}
+      GITHUB_CLIENT_ID: ${file(config/config.${self:provider.stage}.json):GITHUB_CLIENT_ID}
+      GITHUB_CLIENT_SECRET: ${file(config/config.${self:provider.stage}.json):GITHUB_CLIENT_SECRET}
 
     events:
       - http:
-         path: /hello
+         path: /
+         method: get
+
+      - http:
+         path: /{any}
+         method: any
+
+      - http:
+         path: /join/{any}
+         method: get
+
+      - http:
+         path: /new
+         method: get
+
+      - http:
+         path: /github/{any}
+         method: get
+
+      - http:
+         path: /static/{any}
          method: get
 
       - http:
