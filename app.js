@@ -25,8 +25,11 @@ const jwt = require('jsonwebtoken')
 const bodyParser = require('koa-bodyparser')
 const server = new Koa()
 const router = require('koa-router')()
+const session = require('koa-session')
+
 server.use(bodyParser())
 server.keys = [process.env.WEBHOOK_SECRET]
+server.use(session(server))
 
 // Bring in that serverless-http magic
 const serverless = require('serverless-http')
@@ -100,7 +103,8 @@ router.get('/good-bye', ctx => {
 router.use(async (ctx, next) => {
   const token = ctx.cookies.get('session')
   if (!token) {
-    ctx.state.redirect = '/'
+    ctx.session = {}
+    ctx.session.redirect = ctx.originalUrl
     return ctx.redirect('/github/login')
   }
   const github = await robot.auth()
