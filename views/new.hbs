@@ -20,12 +20,25 @@
         </p>
       </label>
 
-      <label class="d-block">
+      <label class="d-block mb-2">
         <input name="role" type="radio" value="admin">
         Owner
         <p class="note">
           Owners have full administrative rights to the organization and have complete access to all
           repositories and teams.
+        </p>
+      </label>
+
+      <label class="d-block mb-2">
+        Team
+        <select name="team" class="form-select ml-1" style="width:150px;">
+          <option selected value="">None</option>
+          {{#each teams}}
+            <option value="{{id}}">{{name}}</option>
+          {{/each}}
+        </select>
+        <p class="note">
+          Add the user to a team when joining.
         </p>
       </label>
     </div>
