@@ -70,14 +70,14 @@ async function findInstallation (ctx, next) {
     return i.account.login === ctx.params.owner
   })
 
-  const github = await ctx.state.robot.auth(installation.id)
-  const teams = (await github.orgs.getTeams({org: installation.account.login})).data
-
-  if (teams.length > 0) {
-    ctx.state.teams = teams
-  }
-
   if (installation) {
+    const github = await ctx.state.robot.auth(installation.id)
+    const teams = (await github.orgs.getTeams({org: installation.account.login})).data
+
+    if (teams.length > 0) {
+      ctx.state.teams = teams
+    }
+
     ctx.state.installation = installation
   } else {
     ctx.response.status = 404
