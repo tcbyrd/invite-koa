@@ -1,9 +1,9 @@
 // Create an app without express
 const cacheManager = require('cache-manager')
-const createRobot = require('probot/lib/robot')
-const createApp = require('probot/lib/github-app')
+const { createRobot } = require('probot/lib/robot')
+const { createApp } = require('probot/lib/github-app')
 const { findPrivateKey } = require('probot/lib/private-key')
-const logger = require('probot/lib/logger')
+const { logger } = require('probot/lib/logger')
 
 const cache = cacheManager.caching({
   store: 'memory',
